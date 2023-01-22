@@ -1,0 +1,23 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: web-deploy-replicas
+  labels:
+    app  : k8sapp
+    env: prod
+    owner: borisovnn
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      project: two
+  template:
+    metadata:
+      labels:
+        project: two
+    spec:
+      containers:
+      - name: two-web
+        image: borisovnn/k8stest:latest
+        ports:
+        - containerPort: 80

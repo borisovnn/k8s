@@ -1,0 +1,45 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: web-deploy-autoscaling
+  labels:
+    app  : k8sapp
+    env: prod
+    owner: borisovnn
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      project: three
+  template:
+    metadata:
+      labels:
+        project: three
+    spec:
+      containers:
+      - name: three-web
+        image: borisovnn/k8stest:latest
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: web-autoscale
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v2
+    kind: Deployment
+    name: web-deploy-autoscaling
+  minReplicas: 2
+  maxReplicas: 6
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      targetAverageUtilization: 80

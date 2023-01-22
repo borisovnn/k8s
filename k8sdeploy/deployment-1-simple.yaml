@@ -1,0 +1,20 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: web-deploy
+  labels:
+    app  : k8sapp
+spec:
+  selector:
+    matchLabels:
+      project: one
+  template:
+    metadata:
+      labels:
+        project: one
+    spec:
+      containers:
+      - name: one-web
+        image: borisovnn/k8stest:latest
+        ports:
+        - containerPort: 80
